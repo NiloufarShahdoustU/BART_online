@@ -1,0 +1,49 @@
+/* style.css */
+.trial-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.trial-number {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.balloon-container {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.balloon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.inflate-button {
+  position: fixed;
+  bottom: 60px; /* Adjusted value to move the button higher */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 40px; /* Increased padding for a larger button */
+  font-size: 40px; /* Increased font size */
+  width: 150px; /* Optional: Adjust width */
+  height: 70px; /* Optional: Adjust height */
+  background-color: green; /* Set background color to green */
+  color: white; /* Set text color to white */
+  font-weight: bold; /* Set text to bold */
+  border: none; /* Remove default border */
+  border-radius: 10px; /* Optional: Add border radius for rounded corners */
+  text-align: center; /* Center text alignment */
+}
