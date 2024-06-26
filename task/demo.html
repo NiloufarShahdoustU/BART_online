@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Balloon Analog Risk Task</title>
+  <title>Demo Exp</title>
   <script src="jspsych/dist/jspsych.js"></script>
   <script src="jspsych/dist/plugin-html-button-response.js"></script>
   <script src="jspsych/dist/plugin-survey-multi-choice.js"></script>
@@ -9,82 +9,25 @@
   <script src="jspsych/dist/plugin-preload.js"></script>
   <script src="jspsych/dist/plugin-survey-text.js"></script>
   <link href="jspsych/dist/jspsych.css" rel="stylesheet" type="text/css" />
+  <style>
+    p {
+      text-align: justify;
+    }
+    .center {
+      text-align: center;
+    }
+    .logo-title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .balloon {
+      display: block;
+      margin: 20px auto;
+    }
+  </style>
 </head>
 <body>
-  <script>
-    ///////////////////////////////////////////////////////////// some optional styling //////////////////////////////////////////////
-    var styles = `
-      p {
-        text-align: justify
-      }
-    `
-    var styleSheet = document.createElement("style")
-    styleSheet.type = "text/css"
-    styleSheet.innerText = styles
-    document.head.appendChild(styleSheet)
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    var jsPsych = initJsPsych({
-      experiment_width: 1000,
-      on_finish: function(){
-        window.location = "https://app.prolific.co/submissions/complete?cc=136BDB5F"
-      },
-      override_safe_mode: true  // Override safe mode to prevent the file protocol warning
-    }); 
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    var timeline = [];
-
-    /* Display title at the beginning */
-    var title_screen = {
-      type: jsPsychHtmlButtonResponse,
-      stimulus: '<h1>Balloon Analog Risk Task</h1>',
-      choices: ['Start']
-    };
-    timeline.push(title_screen);
-
-    /* First screen of the (non-demo version) experiment: asking for confirmations */
-    var confs = {
-        type: jsPsychSurveyMultiChoice, 
-        questions: [
-            {
-                prompt: "This study works properly only on Desktop PCs and Laptops, and not on Smartphones or Tablets. Before you proceed, please confirm that you take part via Desktop PC or Laptop.",
-                name: 'DesktopConf',
-                options: ['1: I confirm', '2: I do not confirm'], 
-                required: true
-            }
-        ], 
-        on_finish: function(data){ //I'm also using this screen to store some conditional variable values that get added to the data
-            if (condition == 1) {
-                scale_orientation = "not_cause_left"
-                likert_scale = ["Certain that it does <u>not</u> cause the expression of the gene", " ", " ", " ", " ", "Fully uncertain", " ", " ", " ", " ", "Certain that it causes the expression of the gene"]; 
-                sample_size = "N32"; 
-            } else if (condition == 2) {
-                scale_orientation = "not_cause_right";
-                likert_scale = ["Certain that it causes the expression of the gene", " ", " ", " ", " ", "Fully uncertain", " ", " ", " ", " ", "Certain that it does <u>not</u> cause the expression of the gene"];
-                sample_size = "N32";
-            } else if (condition == 3) {
-                scale_orientation = "not_cause_left";
-                likert_scale = ["Certain that it does <u>not</u> cause the expression of the gene", " ", " ", " ", " ", "Fully uncertain", " ", " ", " ", " ", "Certain that it causes the expression of the gene"];
-                sample_size = "N128";
-            } else if (condition == 4) {
-                scale_orientation = "not_cause_right";
-                likert_scale = ["Certain that it causes the expression of the gene", " ", " ", " ", " ", "Fully uncertain", " ", " ", " ", " ", "Certain that it does <u>not</u> cause the expression of the gene"];
-                sample_size = "N128";
-          };
-          jsPsych.data.addProperties({desktop_conf: data.response.DesktopConf, scale_orient: scale_orientation, sample_size: sample_size})
-        }, 
-        preamble: `
-                <p><b>Welcome to this experiment and thank you very much for your participation.</b></p>
-              `
-    };
-
-    timeline.push(confs); 
-
-    /////////////////////////////////////////////////////////////////
-    /* start the experiment */
-    jsPsych.run(timeline);
-  </script>
+  <script src="task.js"></script>
 </body>
 </html>
