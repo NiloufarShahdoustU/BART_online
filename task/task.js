@@ -13,7 +13,7 @@ var title_screen = {
   stimulus: `
     <div class="center">
       <div class="logo-title">
-        <img src="img/logo.png" width="50%">
+        <img src="img/logo.png" width="20%">
         <h1>Balloon Analog Risk Task</h1>
       </div>
     </div>
@@ -33,7 +33,7 @@ var confs = {
     }
   ],
   preamble: `
-    <p><img src="img/logo.png" width="50%"></p>
+    <p><img src="img/logo.png" width="20%"></p>
     <p><b>Welcome to this experiment and thank you very much for your participation.</b></p>
   `,
   on_finish: function(data) {
@@ -85,6 +85,8 @@ function getGaussianRandom(mean, stdDev) {
   return mean + stdDev * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
+var totalReward = 0; // Total collected reward
+
 for (let i = 0; i < 10; i++) {
   let balloonColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
   let maxBalloonSize = getGaussianRandom(colorMeans[balloonColor], colorStds[balloonColor]);
@@ -92,29 +94,49 @@ for (let i = 0; i < 10; i++) {
 
   timeline.push({
     type: jsPsychHtmlButtonResponse,
-    stimulus: `
-      <div class="trial-container">
-        <h2 class="trial-number">Trial ${i + 1}</h2>
-        <div class="balloon-container">
-          <div id="balloon" class="balloon" style="background-color:${balloonColor};"></div>
+    stimulus: function() {
+      return `
+        <div class="trial-container">
+          <h2 class="trial-number">Trial ${i + 1}</h2>
+          <h2 class="total-reward">Total Reward: $ ${totalReward}</h2>
+          <div class="balloon-container">
+            <div id="balloon" class="balloon" style="background-image: url('img/${balloonColor}.png');">
+              <div id="reward" class="reward">0</div>
+            </div>
+          </div>
+          <div class="button-container">
+            <button id="inflate" class="inflate-button">Inflate</button>
+            <button id="bank" class="bank-button">Bank</button>
+          </div>
         </div>
-        <button id="inflate" class="jspsych-btn inflate-button">Inflate</button>
-      </div>
-    `,
+      `;
+    },
     choices: [],
     on_load: function() {
       let balloon = document.getElementById('balloon');
+      let rewardElement = document.getElementById('reward');
       let inflateButton = document.getElementById('inflate');
+      let bankButton = document.getElementById('bank');
+      let totalRewardElement = document.querySelector('.total-reward');
       let balloonSize = 50;
+      let reward = 0;
 
       inflateButton.addEventListener('click', function() {
+        inflateButton.classList.add('active');
+        setTimeout(() => {
+          inflateButton.classList.remove('active');
+        }, 100); // Remove class after 100ms for visual effect
+
         if (balloonSize < maxBalloonSize) {
           balloonSize += 20;
+          reward += 10; // Increment the reward by 10 with each inflate
           balloon.style.width = `${balloonSize}px`;
           balloon.style.height = `${balloonSize}px`;
+          rewardElement.textContent = reward; // Update the reward display
         } else {
           balloon.style.display = 'none';
           inflateButton.style.display = 'none';
+          bankButton.style.display = 'none';
           let trialContainer = document.querySelector('.trial-container');
           let popMessage = document.createElement('div');
           popMessage.innerHTML = 'Popped!';
@@ -124,6 +146,24 @@ for (let i = 0; i < 10; i++) {
           trialContainer.appendChild(popMessage);
           setTimeout(jsPsych.finishTrial, 1000);
         }
+      });
+
+      bankButton.addEventListener('click', function() {
+        totalReward += reward; // Add the current reward to the total reward
+        totalRewardElement.textContent = `Total Reward:  ${totalReward}`; // Update the total reward display
+        reward = 0; // Reset the current reward
+        rewardElement.textContent = reward; // Update the reward display
+        balloon.style.display = 'none'; // Hide the balloon
+        inflateButton.style.display = 'none'; // Hide the inflate button
+        bankButton.style.display = 'none'; // Hide the bank button
+        let trialContainer = document.querySelector('.trial-container');
+        let bankMessage = document.createElement('div');
+        bankMessage.innerHTML = 'Banked!';
+        bankMessage.style.fontSize = '50px';
+        bankMessage.style.color = 'green';
+        bankMessage.style.fontWeight = 'bold';
+        trialContainer.appendChild(bankMessage);
+        setTimeout(jsPsych.finishTrial, 1000);
       });
     }
   });

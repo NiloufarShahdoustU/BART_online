@@ -1,4 +1,3 @@
-/* style.css */
 .trial-container {
   position: relative;
   width: 100%;
@@ -25,25 +24,79 @@
   width: 100%;
 }
 
+.inflate-button {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px 40px;
+  font-size: 40px;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.bank-button {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(95%);
+  padding: 20px 40px;
+  font-size: 40px;
+  background-color: lightskyblue;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+}
+
 .balloon {
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none; /* Remove any border */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.inflate-button {
+.reward {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: black; /* Text color */
+  font-weight: bold; /* Text style */
+  font-size: 40px; /* Adjust font size as needed */
+  text-align: center; /* Ensure the text is centered */
+}
+
+.inflate-button:active {
   position: fixed;
-  bottom: 60px; /* Adjusted value to move the button higher */
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 20px 40px; /* Increased padding for a larger button */
-  font-size: 40px; /* Increased font size */
-  width: 150px; /* Optional: Adjust width */
-  height: 70px; /* Optional: Adjust height */
-  background-color: green; /* Set background color to green */
-  color: white; /* Set text color to white */
-  font-weight: bold; /* Set text to bold */
-  border: none; /* Remove default border */
-  border-radius: 10px; /* Optional: Add border radius for rounded corners */
-  text-align: center; /* Center text alignment */
+  padding: 20px 40px;
+  font-size: 40px;
+  background-color: darkgreen;
+  color: white;
+  font-weight: bold;
+  border: 2px solid grey; /* Added grey border */
+  border-radius: 10px;
+  text-align: center;
+}
+
+.total-reward {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 40px;
+  font-weight: bold;
+  color: darkblue;
 }
