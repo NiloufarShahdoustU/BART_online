@@ -14,7 +14,7 @@ var title_screen = {
     <div class="center">
       <div class="logo-title">
         <img src="img/logo.png" width="20%">
-        <h1>Balloon Analog Risk Task</h1>
+        <h1>Balloon Analog Risk Task (BART)</h1>
       </div>
     </div>
   `,
@@ -50,7 +50,7 @@ var task_description = {
   type: jsPsychHtmlButtonResponse,
   stimulus: `
     <div class="center">
-      <h2>Task Description</h2>
+      <h2>Task description</h2>
       <img src="img/task.png" width="50%">
       <p>The task begins with the initial screen showing a small balloon (yellow/orange/red/grey).</p>
       <p><b>Inflate Start:</b> The balloon starts to inflate once you press inflate button.</p>
@@ -98,15 +98,15 @@ for (let i = 0; i < 10; i++) {
       return `
         <div class="trial-container">
           <h2 class="trial-number">Trial ${i + 1}</h2>
-          <h2 class="total-reward">Total Reward: $ ${totalReward}</h2>
+          <h2 class="total-reward">total reward: $ ${totalReward}</h2>
           <div class="balloon-container">
             <div id="balloon" class="balloon" style="background-image: url('img/${balloonColor}.png');">
               <div id="reward" class="reward">0</div>
             </div>
           </div>
           <div class="button-container">
-            <button id="inflate" class="inflate-button">Inflate</button>
-            <button id="bank" class="bank-button">Bank</button>
+            <button id="inflate" class="inflate-button">inflate</button>
+            <button id="bank" class="bank-button">bank</button>
           </div>
         </div>
       `;
@@ -129,7 +129,7 @@ for (let i = 0; i < 10; i++) {
 
         if (balloonSize < maxBalloonSize) {
           balloonSize += 20;
-          reward += 10; // Increment the reward by 10 with each inflate
+          reward += 1; // Increment the reward by 1 with each inflate
           balloon.style.width = `${balloonSize}px`;
           balloon.style.height = `${balloonSize}px`;
           rewardElement.textContent = reward; // Update the reward display
@@ -139,7 +139,7 @@ for (let i = 0; i < 10; i++) {
           bankButton.style.display = 'none';
           let trialContainer = document.querySelector('.trial-container');
           let popMessage = document.createElement('div');
-          popMessage.innerHTML = 'Popped!';
+          popMessage.innerHTML = 'popped!';
           popMessage.style.fontSize = '50px';
           popMessage.style.color = 'red';
           popMessage.style.fontWeight = 'bold';
@@ -150,7 +150,7 @@ for (let i = 0; i < 10; i++) {
 
       bankButton.addEventListener('click', function() {
         totalReward += reward; // Add the current reward to the total reward
-        totalRewardElement.textContent = `Total Reward:  ${totalReward}`; // Update the total reward display
+        totalRewardElement.textContent = `total reward:  ${totalReward}`; // Update the total reward display
         reward = 0; // Reset the current reward
         rewardElement.textContent = reward; // Update the reward display
         balloon.style.display = 'none'; // Hide the balloon
@@ -158,7 +158,7 @@ for (let i = 0; i < 10; i++) {
         bankButton.style.display = 'none'; // Hide the bank button
         let trialContainer = document.querySelector('.trial-container');
         let bankMessage = document.createElement('div');
-        bankMessage.innerHTML = 'Banked!';
+        bankMessage.innerHTML = 'banked!';
         bankMessage.style.fontSize = '50px';
         bankMessage.style.color = 'green';
         bankMessage.style.fontWeight = 'bold';
