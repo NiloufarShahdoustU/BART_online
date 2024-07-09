@@ -60,10 +60,11 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  border: none; /* Remove any border */
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: width 0.3s ease, height 0.3s ease; /* Add this line */
 }
 
 .reward {
@@ -96,7 +97,7 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  font-size: 40px;
+  font-size: 24px;
   font-weight: bold;
-  color: darkblue;
+  color: black;
 }

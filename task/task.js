@@ -1,6 +1,7 @@
 var jsPsych = initJsPsych({
   experiment_width: 1000,
   on_finish: function() {
+    // we will get back to this link after when we're done.
     window.location = "http://localhost:8080/task/demo.html";
   },
   override_safe_mode: true
@@ -26,7 +27,7 @@ var confs = {
   type: jsPsychSurveyMultiChoice,
   questions: [
     {
-      prompt: "This study works properly only on Desktop PCs and Laptops, and not on Smartphones or Tablets. Before you proceed, please confirm that you take part via Desktop PC or Laptop.",
+      prompt: "This study works properly only on PCs and laptops, and not on smartphones or tablets. Before you proceed, please confirm that you take part via Desktop PC or Laptop.",
       name: 'DesktopConf',
       options: ['1: I confirm', '2: I do not confirm'],
       required: true
@@ -75,9 +76,9 @@ var colorMeans = {
   yellow: 400
 };
 var colorStds = {
-  red: 50,
-  orange: 50,
-  yellow: 50
+  red: 100,
+  orange: 100,
+  yellow: 100
 };
 
 function getGaussianRandom(mean, stdDev) {
