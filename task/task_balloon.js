@@ -45,7 +45,7 @@ for (let i = 0; i < 10; i++) {
           <h2 class="trial-number">Trial ${i + 1}</h2>
           <h2 class="total-reward">total reward: $ ${totalReward}</h2>
           <div class="balloon-container">
-            <div id="balloon" class="balloon" style="background-color: ${balloonColor}; border-radius: 50%; width: 50px; height: 50px;">
+            <div id="balloon" class="balloon" style="background-image: url('img/${balloonColor}.png');">
               <div id="reward" class="reward">0</div>
             </div>
           </div>
@@ -77,7 +77,6 @@ for (let i = 0; i < 10; i++) {
             reward += 1; // Increment the reward by 1 with each inflate
             balloon.style.width = `${balloonSize}px`;
             balloon.style.height = `${balloonSize}px`;
-            balloon.style.borderRadius = '50%'; // Ensure the shape remains a circle
             rewardElement.textContent = reward; // Update the reward display
           } else {
             clearInterval(inflationInterval); // Stop the inflation
