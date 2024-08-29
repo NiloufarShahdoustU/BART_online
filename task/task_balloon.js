@@ -1,4 +1,7 @@
 // If using modules
+//this task is used if we want to have real balloon images instead 
+// of circles. 
+
 var timeline;
 if (typeof require !== 'undefined') {
   timeline = require('./task_description.js');
