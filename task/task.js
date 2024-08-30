@@ -14,15 +14,15 @@ var jsPsych = initJsPsych({
 
 var balloonColors = ["red", "orange", "yellow", "gray"];
 var colorMeans = {
-  red: 200,
-  orange: 300,
-  yellow: 400,
-  gray: 300
+  red: 100,
+  orange: 200,
+  yellow: 300,
+  gray: 250
 };
 var colorStds = {
-  red: 100,
-  orange: 100,
-  yellow: 100,
+  red: 50,
+  orange: 50,
+  yellow: 50,
   gray: 0
 };
 
