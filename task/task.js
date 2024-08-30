@@ -17,13 +17,13 @@ var colorMeans = {
   red: 200,
   orange: 300,
   yellow: 400,
-  gray: 250
+  gray: 300
 };
 var colorStds = {
   red: 100,
   orange: 100,
   yellow: 100,
-  gray: 50
+  gray: 0
 };
 
 function getGaussianRandom(mean, stdDev) {
@@ -75,7 +75,7 @@ for (let i = 0; i < 10; i++) {
 
         inflationInterval = setInterval(function() {
           if (balloonSize < maxBalloonSize) {
-            balloonSize += 20;
+            balloonSize += 10;
             if (balloonColor !== "gray") {
               reward += 1;
             }
