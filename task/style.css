@@ -101,3 +101,18 @@
   font-weight: bold;
   color: black;
 }
+
+
+.circle-container {
+  position: relative;
+}
+
+.fixed-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid grey;
+  border-radius: 50%;
+  z-index: -1; /* Ensures the circle is behind the balloon */
+}

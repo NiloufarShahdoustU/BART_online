@@ -41,12 +41,19 @@ for (let i = 0; i < 10; i++) {
   timeline.push({
     type: jsPsychHtmlButtonResponse,
     stimulus: function() {
+      const isGrayBalloon = balloonColor === "gray";
+      const maxBalloonSize = getGaussianRandom(colorMeans[balloonColor], colorStds[balloonColor]);
+      const fixedCircleSize = Math.round(maxBalloonSize);
+  
       return `
         <div class="trial-container">
           <h2 class="total-reward">total reward: $ ${totalReward}</h2>
           <div class="balloon-container">
-            <div id="balloon" class="balloon" style="background-color: ${balloonColor}; border-radius: 50%; width: 50px; height: 50px;">
-              <div id="reward" class="reward">0</div>
+            <div class="circle-container">
+              ${isGrayBalloon ? `<div class="fixed-circle" style="width: ${fixedCircleSize}px; height: ${fixedCircleSize}px;"></div>` : ''}
+              <div id="balloon" class="balloon" style="background-color: ${balloonColor}; border-radius: 50%; width: 50px; height: 50px;">
+                <div id="reward" class="reward">0</div>
+              </div>
             </div>
           </div>
           <div class="button-container">
@@ -72,7 +79,7 @@ for (let i = 0; i < 10; i++) {
         if (balloonColor !== "gray") {
           bankButton.style.display = 'block';
         }
-
+      
         inflationInterval = setInterval(function() {
           if (balloonSize < maxBalloonSize) {
             balloonSize += 10;
@@ -84,9 +91,16 @@ for (let i = 0; i < 10; i++) {
             rewardElement.textContent = reward;
           } else {
             clearInterval(inflationInterval);
+            
+            // Hide balloon and circle when the max size is reached
             balloon.style.display = 'none';
+            const fixedCircle = document.querySelector('.fixed-circle');
+            if (fixedCircle) {
+              fixedCircle.style.display = 'none';
+            }
+            
             if (bankButton) bankButton.style.display = 'none';
-
+      
             if (balloonColor !== "gray") {
               let trialContainer = document.querySelector('.trial-container');
               let popMessage = document.createElement('div');
@@ -102,6 +116,7 @@ for (let i = 0; i < 10; i++) {
           }
         }, 100);
       }
+      
 
       function bankReward() {
         clearInterval(inflationInterval);
