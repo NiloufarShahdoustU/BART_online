@@ -12,18 +12,18 @@ var jsPsych = initJsPsych({
   override_safe_mode: true
 });
 
-var balloonColors = ["red", "orange", "yellow", "gray"]; // Include "gray" balloon
+var balloonColors = ["red", "orange", "yellow", "gray"];
 var colorMeans = {
   red: 200,
   orange: 300,
   yellow: 400,
-  gray: 250 // Mean size for gray balloon
+  gray: 250
 };
 var colorStds = {
   red: 100,
   orange: 100,
   yellow: 100,
-  gray: 50 // Standard deviation for gray balloon
+  gray: 50
 };
 
 function getGaussianRandom(mean, stdDev) {
@@ -31,7 +31,7 @@ function getGaussianRandom(mean, stdDev) {
   return mean + stdDev * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-var totalReward = 0; // Total collected reward
+var totalReward = 0;
 
 for (let i = 0; i < 10; i++) {
   let balloonColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
@@ -50,8 +50,8 @@ for (let i = 0; i < 10; i++) {
             </div>
           </div>
           <div class="button-container">
-            <button id="inflate" class="inflate-button">inflate</button>
-            ${balloonColor !== "gray" ? '<button id="bank" class="bank-button" style="display: none;">bank</button>' : ''}
+            <button id="inflate" class="inflate-button">inflate(space)</button>
+            ${balloonColor !== "gray" ? '<button id="bank" class="bank-button" style="display: none;">bank(space)</button>' : ''}
           </div>
         </div>
       `;
@@ -67,21 +67,20 @@ for (let i = 0; i < 10; i++) {
       let reward = 0;
       let inflationInterval;
 
-      inflateButton.addEventListener('click', function() {
-        inflateButton.style.display = balloonColor === "gray" ? 'none' : 'none'; // Hide inflate after pressing for gray balloon
+      function inflateBalloon() {
+        inflateButton.style.display = balloonColor === "gray" ? 'none' : 'none';
         if (balloonColor !== "gray") {
-          bankButton.style.display = 'block'; // Show bank button for non-gray balloons
+          bankButton.style.display = 'block';
         }
 
         inflationInterval = setInterval(function() {
           if (balloonSize < maxBalloonSize) {
             balloonSize += 20;
             if (balloonColor !== "gray") {
-              reward += 1; // Increment reward for non-gray balloons
+              reward += 1;
             }
             balloon.style.width = `${balloonSize}px`;
             balloon.style.height = `${balloonSize}px`;
-            balloon.style.borderRadius = '50%';
             rewardElement.textContent = reward;
           } else {
             clearInterval(inflationInterval);
@@ -98,32 +97,45 @@ for (let i = 0; i < 10; i++) {
               trialContainer.appendChild(popMessage);
               setTimeout(jsPsych.finishTrial, 1000);
             } else {
-              setTimeout(jsPsych.finishTrial, 1000); // End trial for gray balloon with no message
+              setTimeout(jsPsych.finishTrial, 1000);
             }
           }
         }, 100);
-      });
-
-      if (bankButton) {
-        bankButton.addEventListener('click', function() {
-          clearInterval(inflationInterval);
-          totalReward += reward;
-          totalRewardElement.textContent = `total reward: $ ${totalReward}`;
-          reward = 0;
-          rewardElement.textContent = reward;
-          balloon.style.display = 'none';
-          inflateButton.style.display = 'none';
-          bankButton.style.display = 'none';
-          let trialContainer = document.querySelector('.trial-container');
-          let bankMessage = document.createElement('div');
-          bankMessage.innerHTML = 'banked!';
-          bankMessage.style.fontSize = '50px';
-          bankMessage.style.color = 'green';
-          bankMessage.style.fontWeight = 'bold';
-          trialContainer.appendChild(bankMessage);
-          setTimeout(jsPsych.finishTrial, 1000);
-        });
       }
+
+      function bankReward() {
+        clearInterval(inflationInterval);
+        totalReward += reward;
+        totalRewardElement.textContent = `total reward: $ ${totalReward}`;
+        reward = 0;
+        rewardElement.textContent = reward;
+        balloon.style.display = 'none';
+        inflateButton.style.display = 'none';
+        if (bankButton) bankButton.style.display = 'none';
+        let trialContainer = document.querySelector('.trial-container');
+        let bankMessage = document.createElement('div');
+        bankMessage.innerHTML = 'banked!';
+        bankMessage.style.fontSize = '50px';
+        bankMessage.style.color = 'green';
+        bankMessage.style.fontWeight = 'bold';
+        trialContainer.appendChild(bankMessage);
+        setTimeout(jsPsych.finishTrial, 1000);
+      }
+
+      inflateButton.addEventListener('click', inflateBalloon);
+      if (bankButton) {
+        bankButton.addEventListener('click', bankReward);
+      }
+
+      document.addEventListener('keydown', function(event) {
+        if (event.code === 'Space') {
+          if (inflateButton.style.display !== 'none') {
+            inflateBalloon();
+          } else if (bankButton && bankButton.style.display !== 'none') {
+            bankReward();
+          }
+        }
+      });
     }
   });
 }

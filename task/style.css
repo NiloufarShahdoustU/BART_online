@@ -30,7 +30,7 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 20px 40px;
-  font-size: 40px;
+  font-size: 30px;
   background-color: green;
   color: white;
   font-weight: bold;
@@ -45,7 +45,7 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 20px 40px;
-  font-size: 40px;
+  font-size: 30px;
   background-color: lightskyblue;
   color: white;
   font-weight: bold;
@@ -84,7 +84,7 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 20px 40px;
-  font-size: 40px;
+  font-size: 30px;
   background-color: darkgreen;
   color: white;
   font-weight: bold;
