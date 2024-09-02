@@ -38,27 +38,33 @@ for (let i = 0; i < 10; i++) {
   let maxBalloonSize = getGaussianRandom(colorMeans[balloonColor], colorStds[balloonColor]);
   maxBalloonSize = Math.max(10, Math.round(maxBalloonSize));
 
+  let isSpecial = false;
+
+  // Determine if this is a special trial
+  if (["yellow", "red", "orange"].includes(balloonColor) && Math.random() < 0.5) { 
+    // 50% chance for special trial (adjust as needed)
+    isSpecial = true;
+  }
+
   timeline.push({
     type: jsPsychHtmlButtonResponse,
     stimulus: function() {
-      const isGrayBalloon = balloonColor === "gray";
-      const maxBalloonSize = getGaussianRandom(colorMeans[balloonColor], colorStds[balloonColor]);
       const fixedCircleSize = Math.round(maxBalloonSize);
-  
+
       return `
         <div class="trial-container">
           <h2 class="total-reward">total reward: $ ${totalReward}</h2>
           <div class="balloon-container">
             <div class="circle-container">
-              ${isGrayBalloon ? `<div class="fixed-circle" style="width: ${fixedCircleSize}px; height: ${fixedCircleSize}px;"></div>` : ''}
+              ${(isSpecial || balloonColor === "gray") ? `<div class="fixed-circle" style="width: ${fixedCircleSize}px; height: ${fixedCircleSize}px;"></div>` : ''}
               <div id="balloon" class="balloon" style="background-color: ${balloonColor}; border-radius: 50%; width: 50px; height: 50px;">
                 <div id="reward" class="reward">0</div>
               </div>
             </div>
           </div>
           <div class="button-container">
+            ${(!isSpecial && balloonColor !== "gray") ? '<button id="bank" class="bank-button" style="display: none;">bank(space)</button>' : ''}
             <button id="inflate" class="inflate-button">inflate(space)</button>
-            ${balloonColor !== "gray" ? '<button id="bank" class="bank-button" style="display: none;">bank(space)</button>' : ''}
           </div>
         </div>
       `;
@@ -74,16 +80,20 @@ for (let i = 0; i < 10; i++) {
       let reward = 0;
       let inflationInterval;
 
+      // Move isSpecial and balloonColor inside on_load so they can be accessed within inflateBalloon
+      const isGrayBalloon = balloonColor === "gray";
+      const isSpecialBalloon = isSpecial;
+
       function inflateBalloon() {
-        inflateButton.style.display = balloonColor === "gray" ? 'none' : 'none';
-        if (balloonColor !== "gray") {
+        inflateButton.style.display = 'none';
+        if (!isGrayBalloon && !isSpecialBalloon) {
           bankButton.style.display = 'block';
         }
       
         inflationInterval = setInterval(function() {
           if (balloonSize < maxBalloonSize) {
             balloonSize += 10;
-            if (balloonColor !== "gray") {
+            if (!isGrayBalloon || isSpecialBalloon) {  // Reward only if not a gray balloon or is a special trial
               reward += 1;
             }
             balloon.style.width = `${balloonSize}px`;
@@ -101,7 +111,11 @@ for (let i = 0; i < 10; i++) {
             
             if (bankButton) bankButton.style.display = 'none';
       
-            if (balloonColor !== "gray") {
+            if (!isGrayBalloon || isSpecialBalloon) {
+              // Add the reward to the total if it's a special trial or non-gray balloon
+              totalReward += reward;
+              totalRewardElement.textContent = `total reward: $ ${totalReward}`;
+
               let trialContainer = document.querySelector('.trial-container');
               let popMessage = document.createElement('div');
               popMessage.innerHTML = 'popped!';
