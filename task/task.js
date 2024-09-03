@@ -14,15 +14,15 @@ var jsPsych = initJsPsych({
 
 var balloonColors = ["red", "orange", "yellow", "gray"];
 var colorMeans = {
-  red: 100,
-  orange: 200,
-  yellow: 300,
+  red: 150,
+  orange: 250,
+  yellow: 350,
   gray: 250
 };
 var colorStds = {
-  red: 50,
-  orange: 50,
-  yellow: 50,
+  red: 40,
+  orange: 40,
+  yellow: 40,
   gray: 0
 };
 
@@ -40,8 +40,8 @@ for (let i = 0; i < 10; i++) {
 
   let isSpecial = false;
 
-  // Determine if this is a special trial
-  if (["yellow", "red", "orange"].includes(balloonColor) && Math.random() < 0.5) { 
+  // Determine if this is a special trial (trials with no grey circles around them)
+  if (["yellow", "red", "orange"].includes(balloonColor) && Math.random() < 0.1) { 
     // 50% chance for special trial (adjust as needed)
     isSpecial = true;
   }
@@ -53,6 +53,7 @@ for (let i = 0; i < 10; i++) {
 
       return `
         <div class="trial-container">
+          <div id="black-square" class="black-square"></div> <!-- Black square element -->
           <h2 class="total-reward">total reward: $ ${totalReward}</h2>
           <div class="balloon-container">
             <div class="circle-container">
@@ -76,6 +77,7 @@ for (let i = 0; i < 10; i++) {
       let inflateButton = document.getElementById('inflate');
       let bankButton = document.getElementById('bank');
       let totalRewardElement = document.querySelector('.total-reward');
+      let blackSquare = document.getElementById('black-square'); // Black square element
       let balloonSize = 50;
       let reward = 0;
       let inflationInterval;
@@ -83,6 +85,12 @@ for (let i = 0; i < 10; i++) {
       // Move isSpecial and balloonColor inside on_load so they can be accessed within inflateBalloon
       const isGrayBalloon = balloonColor === "gray";
       const isSpecialBalloon = isSpecial;
+
+      // Display black square and hide it after 200ms
+      blackSquare.style.display = 'block';
+      setTimeout(() => {
+        blackSquare.style.display = 'none';
+      }, 200);
 
       function inflateBalloon() {
         inflateButton.style.display = 'none';
@@ -111,9 +119,22 @@ for (let i = 0; i < 10; i++) {
             
             if (bankButton) bankButton.style.display = 'none';
       
-            if (!isGrayBalloon || isSpecialBalloon) {
-              // Add the reward to the total if it's a special trial or non-gray balloon
+            if (isSpecialBalloon) {
+              // Add the reward to the total if it's a non-gray balloon
               totalReward += reward;
+              totalRewardElement.textContent = `total reward: $ ${totalReward}`;
+
+              let trialContainer = document.querySelector('.trial-container');
+              let popMessage = document.createElement('div');
+              popMessage.innerHTML = 'banked!';
+              popMessage.style.fontSize = '50px';
+              popMessage.style.color = 'green';
+              popMessage.style.fontWeight = 'bold';
+              trialContainer.appendChild(popMessage);
+              setTimeout(jsPsych.finishTrial, 1000);
+            } 
+            else if(!isGrayBalloon){
+              totalReward += 0;
               totalRewardElement.textContent = `total reward: $ ${totalReward}`;
 
               let trialContainer = document.querySelector('.trial-container');
@@ -124,7 +145,8 @@ for (let i = 0; i < 10; i++) {
               popMessage.style.fontWeight = 'bold';
               trialContainer.appendChild(popMessage);
               setTimeout(jsPsych.finishTrial, 1000);
-            } else {
+            }
+            else {
               setTimeout(jsPsych.finishTrial, 1000);
             }
           }
@@ -168,5 +190,7 @@ for (let i = 0; i < 10; i++) {
     }
   });
 }
+
+
 
 jsPsych.run(timeline);
