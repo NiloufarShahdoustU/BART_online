@@ -1,4 +1,20 @@
 // If using modules
+
+
+//in the code bellow:
+// balloonTime: when balloon appears on the screen
+// inflateTime: when inflate button is pressed
+// outcomeTime: when bank is pressed or is popped
+//reactionTime = inflateTime - balloonTime    these are behavioral measures 
+// inflationTime = outcomeTime - inflateTime  these are behavioral measures 
+
+
+var totalReward = 0;
+let trialData = [];
+let TrialNum = 50;
+let StimProbability = 0.2; // this is the probability of the learning trials and control trials
+
+
 var timeline;
 if (typeof require !== 'undefined') {
   timeline = require('./task_description.js');
@@ -14,7 +30,6 @@ var jsPsych = initJsPsych({
   override_safe_mode: true
 });
 
-var balloonColors = ["red", "orange", "yellow", "gray"];
 var colorMeans = {
   red: 150,
   orange: 250,
@@ -33,20 +48,26 @@ function getGaussianRandom(mean, stdDev) {
   return mean + stdDev * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-var totalReward = 0;
 
-// Create an array to store trial data
-let trialData = [];
+for (let i = 0; i < TrialNum; i++) {
+  let balloonColor;
 
-for (let i = 0; i < 10; i++) {
-  let balloonColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+  // Determine if the gray balloon should appear based on StimProbability
+  if (Math.random() < StimProbability) {
+    balloonColor = "gray";
+  } else {
+    // Randomly pick a non-gray balloon color from the remaining colors
+    let otherBalloonColors = ["red", "orange", "yellow"];
+    balloonColor = otherBalloonColors[Math.floor(Math.random() * otherBalloonColors.length)];
+  }
+
   let maxBalloonSize = getGaussianRandom(colorMeans[balloonColor], colorStds[balloonColor]);
   maxBalloonSize = Math.max(10, Math.round(maxBalloonSize));
 
   let isSpecial = false;
 
-  // special colorful balloons are the ones with grey cicles.
-  if (["yellow", "red", "orange"].includes(balloonColor) && Math.random() < 0.2) { 
+  // Special colorful balloons are the ones with gray circles.
+  if (["yellow", "red", "orange" ].includes(balloonColor) && Math.random() < StimProbability) {
     isSpecial = true;
   }
 
@@ -89,7 +110,15 @@ for (let i = 0; i < 10; i++) {
       const isGrayBalloon = balloonColor === "gray";
       const isSpecialBalloon = isSpecial;
 
-      let responseTime, inflateTime;
+      // Time variables
+      let balloonTime, inflateTime, outcomeTime, reactionTime, inflationTime;
+      // balloonTime: when balloon appears on the screen
+      // inflateTime: when inflate button is pressed
+      // outcomeTime: when bank is pressed or the balloon pops
+      // reactionTime = inflateTime - balloonTime    (behavioral measure)
+      // inflationTime = outcomeTime - inflateTime   (behavioral measure)
+
+      balloonTime = performance.now(); // Record the time when the balloon appears
 
       blackSquare.style.display = 'block';
       setTimeout(() => {
@@ -98,11 +127,12 @@ for (let i = 0; i < 10; i++) {
 
       function inflateBalloon() {
         inflateButton.style.display = 'none';
-        responseTime = performance.now();
+        inflateTime = performance.now(); // Record the time when the inflate button is pressed
+
         if (!isGrayBalloon && !isSpecialBalloon) {
           bankButton.style.display = 'block';
         }
-      
+
         inflationInterval = setInterval(function() {
           if (balloonSize < maxBalloonSize) {
             balloonSize += 10;
@@ -114,13 +144,14 @@ for (let i = 0; i < 10; i++) {
             rewardElement.textContent = reward;
           } else {
             clearInterval(inflationInterval);
-            inflateTime = performance.now();
             balloon.style.display = 'none';
             const fixedCircle = document.querySelector('.fixed-circle');
             if (fixedCircle) {
               fixedCircle.style.display = 'none';
             }
             if (bankButton) bankButton.style.display = 'none';
+
+            outcomeTime = performance.now();
 
             let outcome = 'popped';
 
@@ -153,12 +184,16 @@ for (let i = 0; i < 10; i++) {
               setTimeout(jsPsych.finishTrial, 1000);
             }
 
+            // Calculate reactionTime and inflationTime
+            reactionTime = inflateTime - balloonTime;
+            inflationTime = outcomeTime - inflateTime;
+
             // Save trial data
             trialData.push({
               balloonType: balloonColor + (isSpecial ? " (special)" : ""),
               outcome: outcome,
-              responseTime: responseTime,
-              inflateTime: inflateTime,
+              reactionTime: reactionTime,
+              inflationTime: inflationTime,
               reward: totalReward
             });
           }
@@ -167,7 +202,8 @@ for (let i = 0; i < 10; i++) {
 
       function bankReward() {
         clearInterval(inflationInterval);
-        inflateTime = performance.now();
+        outcomeTime = performance.now(); // Record the time when bank button is pressed
+
         totalReward += reward;
         totalRewardElement.textContent = `total reward: $ ${totalReward}`;
         reward = 0;
@@ -175,6 +211,7 @@ for (let i = 0; i < 10; i++) {
         balloon.style.display = 'none';
         inflateButton.style.display = 'none';
         if (bankButton) bankButton.style.display = 'none';
+
         let trialContainer = document.querySelector('.trial-container');
         let bankMessage = document.createElement('div');
         bankMessage.innerHTML = 'banked!';
@@ -184,12 +221,16 @@ for (let i = 0; i < 10; i++) {
         trialContainer.appendChild(bankMessage);
         setTimeout(jsPsych.finishTrial, 1000);
 
+        // Calculate reactionTime and inflationTime
+        reactionTime = inflateTime - balloonTime;
+        inflationTime = outcomeTime - inflateTime;
+
         // Save trial data
         trialData.push({
-          balloonType: balloonColor + (isSpecial ? "_special" : ""),
+          balloonType: balloonColor + (isSpecial ? " (special)" : ""),
           outcome: 'banked',
-          responseTime: responseTime,
-          inflateTime: inflateTime,
+          reactionTime: reactionTime,
+          inflationTime: inflationTime,
           reward: totalReward
         });
       }
@@ -210,14 +251,22 @@ for (let i = 0; i < 10; i++) {
       });
     }
   });
+
+  timeline.push({
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: '',
+    choices: 'NO_KEYS', // No keypress allowed during ITI
+    trial_duration: 750, // Set ITI duration to 750 ms
+  });
+
 }
 
 // Function to save trial data to CSV
 function saveCSV() {
-  const header = "balloonType,outcome,responseTime,inflateTime,reward\n";
-  const rows = trialData.map(trial => `${trial.balloonType},${trial.outcome},${trial.responseTime},${trial.inflateTime},${trial.reward}\n`);
+  const header = "balloonType,outcome,reactionTime (ms),inflationTime (ms),reward\n";
+  const rows = trialData.map(trial => `${trial.balloonType},${trial.outcome},${trial.reactionTime},${trial.inflationTime},${trial.reward}\n`);
   const csvContent = header + rows.join('');
-  
+
   const blob = new Blob([csvContent], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
