@@ -18,9 +18,9 @@ var confs = {
   type: jsPsychSurveyMultiChoice,
   questions: [
     {
-      prompt: "This study works properly only on PCs and laptops, and not on smartphones or tablets. Before you proceed, please confirm that you take part via Desktop PC or Laptop.",
+      prompt: "This study works properly only on PCs and laptops, and not on smartphones or tablets. Please confirm that you take part via Desktop PC or Laptop.",
       name: 'DesktopConf',
-      options: ['1: I confirm', '2: I do not confirm'],
+      options: ['I confirm'],
       required: true
     }
   ],
@@ -28,15 +28,6 @@ var confs = {
     <p><img src="img/logo.png" width="20%"></p>
     <p><b>Welcome to this experiment and thank you very much for your participation.</b></p>
   `,
-  on_finish: function(data) {
-    var responses = data.response;
-    if (responses.DesktopConf === '2: I do not confirm') {
-      jsPsych.endExperiment('The experiment has been terminated because you are not using a Desktop PC or Laptop.');
-      setTimeout(() => {
-        window.location.reload(); // Reloads the page after showing the message
-      }, 3000); // Waits for 3 seconds before reloading
-    }
-  }
 };
 
 
@@ -76,7 +67,7 @@ var demographic_form = {
   ],
   preamble: `
 <p><img src="img/logo.png" width="20%"></p>
-  <p><b>Consent form.</b></p>
+  <p><b>Demographic form.</b></p>
 `
 };
 
