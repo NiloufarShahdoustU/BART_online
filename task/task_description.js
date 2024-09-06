@@ -64,6 +64,25 @@ var consent_form = {
 timeline.push(consent_form);
 
 
+var demographic_form = {
+  type: jsPsychSurveyMultiChoice,
+  questions: [
+    {
+      prompt: "Is demographic form done?",
+      name: 'DesktopConf',
+      options: ['1: I agree.'],
+      required: true
+    }
+  ],
+  preamble: `
+<p><img src="img/logo.png" width="20%"></p>
+  <p><b>Consent form.</b></p>
+`
+};
+
+timeline.push(demographic_form);
+
+
 
 var task_description = {
   type: jsPsychHtmlButtonResponse,
