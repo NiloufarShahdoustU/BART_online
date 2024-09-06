@@ -11,7 +11,7 @@
 
 var totalReward = 0;
 let trialData = [];
-let TrialNum = 50;
+let TrialNum = 5;
 let StimProbability = 0.2; // this is the probability of the learning trials and control trials
 
 
@@ -261,6 +261,8 @@ for (let i = 0; i < TrialNum; i++) {
 
 }
 
+
+
 // Function to save trial data to CSV
 function saveCSV() {
   const header = "balloonType,outcome,reactionTime (ms),inflationTime (ms),reward\n";
@@ -274,6 +276,24 @@ function saveCSV() {
   a.setAttribute('download', 'task_data.csv');
   a.click();
 }
+
+
+timeline.push({
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <div style="font-size: 24px; text-align: center;">
+      <h1>Thank you for your participation!</h1>
+      <h1>Press 'T' to terminate the task</h1>
+      <h1>and save the data.</h1>
+    </div>`,
+  choices: ['t'],
+  on_finish: function() {
+    // Save the data and end the experiment when 'T' is pressed
+    saveCSV();
+    jsPsych.endExperiment("The task has been terminated. Thank you!");
+  }
+});
+
 
 // Initialize the experiment
 jsPsych.run(timeline);
