@@ -8,6 +8,8 @@ var jsPsych = initJsPsych({
   experiment_width: 1000,
   on_finish: function() {
     window.location = "file:///Users/niloufarshahdoust/Documents/PhD/0.%20NeuroSmith/Tasks/3_BART_online/BART_online/task/demo.html";
+    saveCSV(); // Save the CSV file at the end
+    jsPsych.data.displayData(); // Display data at the end
   },
   override_safe_mode: true
 });
@@ -33,6 +35,9 @@ function getGaussianRandom(mean, stdDev) {
 
 var totalReward = 0;
 
+// Create an array to store trial data
+let trialData = [];
+
 for (let i = 0; i < 10; i++) {
   let balloonColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
   let maxBalloonSize = getGaussianRandom(colorMeans[balloonColor], colorStds[balloonColor]);
@@ -40,9 +45,8 @@ for (let i = 0; i < 10; i++) {
 
   let isSpecial = false;
 
-  // Determine if this is a special trial (trials with no grey circles around them)
-  if (["yellow", "red", "orange"].includes(balloonColor) && Math.random() < 0.1) { 
-    // 50% chance for special trial (adjust as needed)
+  // special colorful balloons are the ones with grey cicles.
+  if (["yellow", "red", "orange"].includes(balloonColor) && Math.random() < 0.2) { 
     isSpecial = true;
   }
 
@@ -53,7 +57,7 @@ for (let i = 0; i < 10; i++) {
 
       return `
         <div class="trial-container">
-          <div id="black-square" class="black-square"></div> <!-- Black square element -->
+          <div id="black-square" class="black-square"></div>
           <h2 class="total-reward">total reward: $ ${totalReward}</h2>
           <div class="balloon-container">
             <div class="circle-container">
@@ -77,16 +81,16 @@ for (let i = 0; i < 10; i++) {
       let inflateButton = document.getElementById('inflate');
       let bankButton = document.getElementById('bank');
       let totalRewardElement = document.querySelector('.total-reward');
-      let blackSquare = document.getElementById('black-square'); // Black square element
+      let blackSquare = document.getElementById('black-square');
       let balloonSize = 50;
       let reward = 0;
       let inflationInterval;
 
-      // Move isSpecial and balloonColor inside on_load so they can be accessed within inflateBalloon
       const isGrayBalloon = balloonColor === "gray";
       const isSpecialBalloon = isSpecial;
 
-      // Display black square and hide it after 200ms
+      let responseTime, inflateTime;
+
       blackSquare.style.display = 'block';
       setTimeout(() => {
         blackSquare.style.display = 'none';
@@ -94,6 +98,7 @@ for (let i = 0; i < 10; i++) {
 
       function inflateBalloon() {
         inflateButton.style.display = 'none';
+        responseTime = performance.now();
         if (!isGrayBalloon && !isSpecialBalloon) {
           bankButton.style.display = 'block';
         }
@@ -101,7 +106,7 @@ for (let i = 0; i < 10; i++) {
         inflationInterval = setInterval(function() {
           if (balloonSize < maxBalloonSize) {
             balloonSize += 10;
-            if (!isGrayBalloon || isSpecialBalloon) {  // Reward only if not a gray balloon or is a special trial
+            if (!isGrayBalloon || isSpecialBalloon) {
               reward += 1;
             }
             balloon.style.width = `${balloonSize}px`;
@@ -109,20 +114,20 @@ for (let i = 0; i < 10; i++) {
             rewardElement.textContent = reward;
           } else {
             clearInterval(inflationInterval);
-            
-            // Hide balloon and circle when the max size is reached
+            inflateTime = performance.now();
             balloon.style.display = 'none';
             const fixedCircle = document.querySelector('.fixed-circle');
             if (fixedCircle) {
               fixedCircle.style.display = 'none';
             }
-            
             if (bankButton) bankButton.style.display = 'none';
-      
+
+            let outcome = 'popped';
+
             if (isSpecialBalloon) {
-              // Add the reward to the total if it's a non-gray balloon
               totalReward += reward;
               totalRewardElement.textContent = `total reward: $ ${totalReward}`;
+              outcome = 'banked';
 
               let trialContainer = document.querySelector('.trial-container');
               let popMessage = document.createElement('div');
@@ -132,8 +137,7 @@ for (let i = 0; i < 10; i++) {
               popMessage.style.fontWeight = 'bold';
               trialContainer.appendChild(popMessage);
               setTimeout(jsPsych.finishTrial, 1000);
-            } 
-            else if(!isGrayBalloon){
+            } else if (!isGrayBalloon) {
               totalReward += 0;
               totalRewardElement.textContent = `total reward: $ ${totalReward}`;
 
@@ -145,17 +149,25 @@ for (let i = 0; i < 10; i++) {
               popMessage.style.fontWeight = 'bold';
               trialContainer.appendChild(popMessage);
               setTimeout(jsPsych.finishTrial, 1000);
-            }
-            else {
+            } else {
               setTimeout(jsPsych.finishTrial, 1000);
             }
+
+            // Save trial data
+            trialData.push({
+              balloonType: balloonColor + (isSpecial ? " (special)" : ""),
+              outcome: outcome,
+              responseTime: responseTime,
+              inflateTime: inflateTime,
+              reward: totalReward
+            });
           }
         }, 100);
       }
-      
 
       function bankReward() {
         clearInterval(inflationInterval);
+        inflateTime = performance.now();
         totalReward += reward;
         totalRewardElement.textContent = `total reward: $ ${totalReward}`;
         reward = 0;
@@ -171,6 +183,15 @@ for (let i = 0; i < 10; i++) {
         bankMessage.style.fontWeight = 'bold';
         trialContainer.appendChild(bankMessage);
         setTimeout(jsPsych.finishTrial, 1000);
+
+        // Save trial data
+        trialData.push({
+          balloonType: balloonColor + (isSpecial ? "_special" : ""),
+          outcome: 'banked',
+          responseTime: responseTime,
+          inflateTime: inflateTime,
+          reward: totalReward
+        });
       }
 
       inflateButton.addEventListener('click', inflateBalloon);
@@ -191,6 +212,19 @@ for (let i = 0; i < 10; i++) {
   });
 }
 
+// Function to save trial data to CSV
+function saveCSV() {
+  const header = "balloonType,outcome,responseTime,inflateTime,reward\n";
+  const rows = trialData.map(trial => `${trial.balloonType},${trial.outcome},${trial.responseTime},${trial.inflateTime},${trial.reward}\n`);
+  const csvContent = header + rows.join('');
+  
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('href', url);
+  a.setAttribute('download', 'task_data.csv');
+  a.click();
+}
 
-
+// Initialize the experiment
 jsPsych.run(timeline);
