@@ -51,7 +51,7 @@ var consent_form = {
     {
       prompt: "Do you agree?",
       name: 'DesktopConf',
-      options: ['1: I agree.'],
+      options: ['I agree.'],
       required: true
     }
   ],
@@ -70,7 +70,7 @@ var demographic_form = {
     {
       prompt: "Is demographic form done?",
       name: 'DesktopConf',
-      options: ['1: I agree.'],
+      options: ['Yes.'],
       required: true
     }
   ],
