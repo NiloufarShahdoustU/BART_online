@@ -23,7 +23,7 @@ if (typeof require !== 'undefined') {
 var jsPsych = initJsPsych({
   experiment_width: 1000,
   on_finish: function() {
-    window.location = "file:///Users/niloufarshahdoust/Documents/PhD/0.%20NeuroSmith/Tasks/3_BART_online/BART_online/task/demo.html";
+    window.location = "https://www.neurosmiths.org/bart/demo.html";
     saveCSV(); // Save the CSV file at the end
     jsPsych.data.displayData(); // Display data at the end
   },
