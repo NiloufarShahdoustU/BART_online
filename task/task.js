@@ -24,7 +24,6 @@ var jsPsych = initJsPsych({
   experiment_width: 1000,
   on_finish: function() {
     window.location = "https://www.neurosmiths.org/bart/demo.html";
-    saveCSV(); // Save the CSV file at the end
     jsPsych.data.displayData(); // Display data at the end
   },
   override_safe_mode: true
