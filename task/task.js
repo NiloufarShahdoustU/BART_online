@@ -265,6 +265,17 @@ for (let i = 0; i < TrialNum; i++) {
 
 // Function to save trial data to CSV
 function saveCSV() {
+  // Get current date and time for file naming
+  var date = new Date();
+  var year = date.getFullYear();
+  var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero
+  var day = ("0" + date.getDate()).slice(-2); // Add leading zero
+  var hours = ("0" + date.getHours()).slice(-2); // Add leading zero
+  var minutes = ("0" + date.getMinutes()).slice(-2); // Add leading zero
+  var seconds = ("0" + date.getSeconds()).slice(-2); // Add leading zero
+
+  var dateTime = `${day}_${month}_${year}_${hours}_${minutes}_${seconds}`;
+  
   const header = "balloonType,outcome,reactionTime (ms),inflationTime (ms),reward\n";
   const rows = trialData.map(trial => `${trial.balloonType},${trial.outcome},${trial.reactionTime},${trial.inflationTime},${trial.reward}\n`);
   const csvContent = header + rows.join('');
@@ -272,8 +283,11 @@ function saveCSV() {
   const blob = new Blob([csvContent], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
+
+  // Use dateTime in the filename
+  const fileName = `task_data_${dateTime}.csv`;
   a.setAttribute('href', url);
-  a.setAttribute('download', 'task_data.csv');
+  a.setAttribute('download', fileName);
   a.click();
 }
 

@@ -51,7 +51,7 @@ var consent_form = {
 };
 timeline.push(consent_form);
 
-// Demographic Form with multiple questions
+/// Demographic Form with multiple questions
 var demographic_form = {
   type: jsPsychSurveyMultiChoice,
   questions: [
@@ -135,7 +135,7 @@ function downloadDemographicData() {
   var minutes = ("0" + date.getMinutes()).slice(-2); // Add leading zero
   var seconds = ("0" + date.getSeconds()).slice(-2); // Add leading zero
 
-  var dateTime = `${year}_${month}_${day}_${hours}_${minutes}_${seconds}`;
+  var dateTime = `${day}_${month}_${year}_${hours}_${minutes}_${seconds}`;
 
   // Create a blob for CSV data
   var blob = new Blob([csv], { type: 'text/csv' });
@@ -153,7 +153,6 @@ function downloadDemographicData() {
   window.URL.revokeObjectURL(url);
   document.body.removeChild(a);
 }
-
 
 // Export timeline if using modules
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
