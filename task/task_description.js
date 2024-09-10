@@ -1,3 +1,13 @@
+
+export function taskDescription() { 
+  return new Promise((resolve) => { 
+    jsPsych = initJsPsych({ 
+      experiment_width: 1000, 
+      on_finish: function () { 
+        resolve() 
+      } 
+    }); 
+
 var timeline = [];
 
 // Title Screen
@@ -114,7 +124,10 @@ var task_description = {
   }
 };
 timeline.push(task_description);
+jsPsych.run(timeline); 
 
+
+//////////////////////////////////////////FUNCTIONS/////////////////////////////////////////////////////////
 // Function to automatically download demographic data
 function downloadDemographicData() {
   // Filter the demographic form responses only using the 'task' data tag
@@ -154,7 +167,8 @@ function downloadDemographicData() {
   document.body.removeChild(a);
 }
 
-// Export timeline if using modules
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-  module.exports = timeline;
+//////////////////////////////////////////FUNCTIONS/////////////////////////////////////////////////////////
+
+
+}) 
 }

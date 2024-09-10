@@ -9,25 +9,32 @@
 // inflationTime = outcomeTime - inflateTime  these are behavioral measures 
 
 
+export function runTask(jsPsych) {
+  // Initialize jsPsych here if it's not initialized elsewhere
+  return new Promise((resolve) => {
+    jsPsych = initJsPsych({ 
+      experiment_width: 1000, 
+      on_finish: function () { 
+        resolve() 
+      } 
+    });
+
 var totalReward = 0;
 let trialData = [];
-let TrialNum = 5;
-let StimProbability = 0.2; // this is the probability of the learning trials and control trials
+let TrialNum = 1;
+let StimProbability = 0.25; // this is the probability of the learning trials and control trials
 
 
-var timeline;
-if (typeof require !== 'undefined') {
-  timeline = require('./task_description.js');
-}
+var timeline = [];
 
-var jsPsych = initJsPsych({
-  experiment_width: 1000,
-  on_finish: function() {
-    window.location = "https://www.neurosmiths.org/bart/demo.html";
-    jsPsych.data.displayData(); // Display data at the end
-  },
-  override_safe_mode: true
-});
+// var jsPsych = initJsPsych({
+//   experiment_width: 1000,
+//   on_finish: function() {
+//     // window.location = "https://www.neurosmiths.org/bart/demo.html";
+//     jsPsych.data.displayData(); // Display data at the end
+//   },
+//   override_safe_mode: true
+// });
 
 var colorMeans = {
   red: 150,
@@ -295,9 +302,8 @@ timeline.push({
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <div style="font-size: 24px; text-align: center;">
-      <h1>Thank you for your participation!</h1>
-      <h1>Press 'T' to terminate the task</h1>
-      <h1>and save the data.</h1>
+      <h2>Press 'T' to terminate the task</h2>
+      <h2>and save the data.</h2>
     </div>`,
   choices: ['t'],
   on_finish: function() {
@@ -310,3 +316,6 @@ timeline.push({
 
 // Initialize the experiment
 jsPsych.run(timeline);
+})
+
+}
