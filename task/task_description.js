@@ -56,10 +56,31 @@ var consent_form = {
   ],
   preamble: `
 <p><img src="img/logo.png" width="20%"></p>
-  <p><b>Consent form.</b></p>
+<h1 style="text-align: left;">Consent to participate in research</h1>
+<h2 style="text-align: left;">Purpose:</h2>
+<p>You are invited to participate in a research study aimed at understanding decision-making behavior. This study involves completing a brief online task.</p>
+
+<h2 style="text-align: left;">Duration:</h2>
+<p>Your participation will take approximately 30 minutes.</p>
+
+<h2 style="text-align: left;">Procedures:</h2>
+<p>You will complete an online task, which may involve decision-making exercises. In the next steps the task will be explained.</p>
+
+<h2 style="text-align: left;">Risks and Benefits:</h2>
+<p>There are no known risks beyond typical discomfort from screen usage. There are no direct benefits to you, but your participation will contribute to research on behavior.</p>
+
+<h2 style="text-align: left;">Confidentiality:</h2>
+<p>Your responses will be kept confidential and anonymous. No identifying information will be linked to your data.</p>
+
+<h2 style="text-align: left;">Voluntary Participation:</h2>
+<p>Your participation is voluntary, and you may withdraw at any time without penalty.</p>
+
+<h2 style="text-align: left;">Contact Information:</h2>
+<p>If you have any questions, please contact NeuroSmith lab.</p>
 `
 };
 timeline.push(consent_form);
+
 
 /// Demographic Form with multiple questions
 var demographic_form = {
@@ -116,6 +137,7 @@ var task_description = {
       </ul>
       <p><b>Note:</b></p>
       <p>A grey balloon is a passive trial, you can just watch it.</p>
+      <p>At the end of the task, there will be a questionnaire. We kindly ask you to take a 5 minutes to answer the questions.</p>
     </div>
   `,
   choices: ['Next'],

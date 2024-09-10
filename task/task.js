@@ -302,14 +302,12 @@ timeline.push({
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <div style="font-size: 24px; text-align: center;">
-      <h2>Press 'T' to terminate the task</h2>
-      <h2>and save the data.</h2>
+      <h3>Press 'C' to continue to the questionnaire part.</h3>
     </div>`,
-  choices: ['t'],
+  choices: ['c'],
   on_finish: function() {
-    // Save the data and end the experiment when 'T' is pressed
+    // Save the data and end the experiment when 'C' is pressed
     saveCSV();
-    jsPsych.endExperiment("The task has been terminated. Thank you!");
   }
 });
 
