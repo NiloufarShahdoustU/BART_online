@@ -3,8 +3,61 @@ export function taskQuestionnaire(jsPsych) {
     jsPsych = initJsPsych({ 
       experiment_width: 1000, 
       on_finish: function () { 
-        window.location = "https://www.neurosmiths.org/tasks.html";
-        resolve() 
+        // Get current date and time for file naming
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero
+        var day = ("0" + date.getDate()).slice(-2); // Add leading zero
+        var hours = ("0" + date.getHours()).slice(-2); // Add leading zero
+        var minutes = ("0" + date.getMinutes()).slice(-2); // Add leading zero
+        var seconds = ("0" + date.getSeconds()).slice(-2); // Add leading zero
+        var dateTime = `${day}_${month}_${year}_${hours}_${minutes}_${seconds}`;
+
+        // Get the survey data
+        var data = jsPsych.data.get().filter({trial_type: 'survey-likert'}).values()[0];
+
+        // Map numeric responses to actual labels
+        var responseLabels = [
+          "Rarely/Never", 
+          "Occasionally", 
+          "Often", 
+          "Almost Always/Always"
+        ];
+
+        // Create a new object with the mapped responses
+        var answers = {};
+        Object.keys(data.response).forEach(function(question, index) {
+          answers[`Question_${index + 1}`] = responseLabels[data.response[question]];
+        });
+
+        // Convert the processed answers to CSV format
+        var csvContent = "data:text/csv;charset=utf-8,";
+        Object.keys(answers).forEach(function(question) {
+          csvContent += `${question},${answers[question]}\n`;
+        });
+
+        // Trigger CSV file download
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement('a');
+        link.href = encodedUri;
+        link.download = `questionnaire_responses_${dateTime}.csv`;
+        document.body.appendChild(link); // Required for Firefox
+        link.click();
+        document.body.removeChild(link);
+
+        // Show thank you message and then resolve
+        document.body.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+          <h1 style="font-size: 24px; text-align: center;">Thank you for your participation!</h1>
+        </div>
+      `;
+      
+        
+        // After showing the thank you message for a while, resolve the promise
+        setTimeout(() => {
+          window.location = "https://www.neurosmiths.org/tasks.html";
+          resolve(); 
+        }, 3000); // 3-second delay before redirecting
       } 
     }); 
 
@@ -24,6 +77,7 @@ export function taskQuestionnaire(jsPsych) {
           </div>
         </div>
       `,
+      button_label: 'Done', // Replacing "Continue" with "Done"
       questions: [
         {prompt: "1. I plan tasks carefully.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
         {prompt: "2. I do things without thinking.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
@@ -59,8 +113,6 @@ export function taskQuestionnaire(jsPsych) {
     };
 
     timeline.push(questionnaire);
-
-    
 
     // Start the experiment
     jsPsych.run(timeline);
