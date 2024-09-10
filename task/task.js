@@ -21,7 +21,7 @@ export function runTask(jsPsych) {
 
 var totalReward = 0;
 let trialData = [];
-let TrialNum = 1;
+let TrialNum = 250;
 let StimProbability = 0.25; // this is the probability of the learning trials and control trials
 
 
