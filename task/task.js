@@ -11,7 +11,7 @@ export function runTask(jsPsych) {
     var totalReward = 0;
     let trialData = [];
     let TrialNum = 250;
-    let BalloonSizeStep = 8;
+    let BalloonSizeStep = 7;
     let specialTrialCount = Math.round(TrialNum * 0.25); // 25% special trials (gray + special colorful)
     let normalTrialCount = TrialNum - specialTrialCount;  // 75% normal trials
     let timeline = [];
@@ -90,7 +90,7 @@ export function runTask(jsPsych) {
           return `
             <div class="trial-container">
               <div id="black-square" class="black-square"></div>
-              <h2 class="total-reward">total reward: $ ${totalReward}</h2>
+              <h2 class="total-reward">total reward: $ ${totalReward.toFixed(1)}</h2>
               <div class="balloon-container">
                 <div class="circle-container">
                   ${(isSpecial || balloonColor === "gray") ? `<div class="fixed-circle" style="width: ${fixedCircleSize}px; height: ${fixedCircleSize}px;"></div>` : ''}
@@ -115,7 +115,7 @@ export function runTask(jsPsych) {
           let totalRewardElement = document.querySelector('.total-reward');
           let blackSquare = document.getElementById('black-square');
           let balloonSize = 50;
-          let reward = 0;
+          let reward = 0.0;
           let inflationInterval;
 
           const isGrayBalloon = balloonColor === "gray";
@@ -128,25 +128,31 @@ export function runTask(jsPsych) {
           blackSquare.style.display = 'block';
           setTimeout(() => {
             blackSquare.style.display = 'none';
-          }, 200);
+          }, 100);
 
           function inflateBalloon() {
             inflateButton.style.display = 'none';
             inflateTime = performance.now();
-
+          
+            // Show the black square for 100 ms when the inflation button is pressed
+            blackSquare.style.display = 'block';
+            setTimeout(() => {
+              blackSquare.style.display = 'none';
+            }, 100);
+            
             if (!isGrayBalloon && !isSpecialBalloon) {
               bankButton.style.display = 'block';
             }
-
+          
             inflationInterval = setInterval(function () {
               if (balloonSize < maxBalloonSize) {
                 balloonSize += BalloonSizeStep;
                 if (!isGrayBalloon || isSpecialBalloon) {
-                  reward += 1;
+                  reward += 0.10;
                 }
                 balloon.style.width = `${balloonSize}px`;
                 balloon.style.height = `${balloonSize}px`;
-                rewardElement.textContent = reward;
+                rewardElement.textContent = reward.toFixed(1);
               } else {
                 clearInterval(inflationInterval);
                 balloon.style.display = 'none';
@@ -155,15 +161,21 @@ export function runTask(jsPsych) {
                   fixedCircle.style.display = 'none';
                 }
                 if (bankButton) bankButton.style.display = 'none';
-
+          
                 outcomeTime = performance.now();
                 let outcome = 'popped';
-
+          
+                // Show the black square for 100 ms when the outcome is shown
+                blackSquare.style.display = 'block';
+                setTimeout(() => {
+                  blackSquare.style.display = 'none';
+                }, 100);
+          
                 if (isSpecialBalloon) {
                   totalReward += reward;
-                  totalRewardElement.textContent = `total reward: $ ${totalReward}`;
+                  totalRewardElement.textContent = `total reward: $ ${totalReward.toFixed(1)}`;
                   outcome = 'banked';
-
+          
                   let trialContainer = document.querySelector('.trial-container');
                   let popMessage = document.createElement('div');
                   popMessage.innerHTML = 'banked!';
@@ -174,8 +186,8 @@ export function runTask(jsPsych) {
                   setTimeout(jsPsych.finishTrial, 1000);
                 } else if (!isGrayBalloon) {
                   totalReward += 0;
-                  totalRewardElement.textContent = `total reward: $ ${totalReward}`;
-
+                  totalRewardElement.textContent = `total reward: $ ${totalReward.toFixed(1)}`;
+          
                   let trialContainer = document.querySelector('.trial-container');
                   let popMessage = document.createElement('div');
                   popMessage.innerHTML = 'popped!';
@@ -187,10 +199,10 @@ export function runTask(jsPsych) {
                 } else {
                   setTimeout(jsPsych.finishTrial, 1000);
                 }
-
+          
                 reactionTime = inflateTime - balloonTime;
                 inflationTime = outcomeTime - inflateTime;
-
+          
                 trialData.push({
                   balloonType: balloonColor + (isSpecial ? " (special)" : ""),
                   outcome: outcome,
@@ -201,19 +213,26 @@ export function runTask(jsPsych) {
               }
             }, 100);
           }
+          
 
           function bankReward() {
             clearInterval(inflationInterval);
             outcomeTime = performance.now();
-
+          
+            // Show the black square for 100 ms when the reward is banked
+            blackSquare.style.display = 'block';
+            setTimeout(() => {
+              blackSquare.style.display = 'none';
+            }, 100);
+          
             totalReward += reward;
-            totalRewardElement.textContent = `total reward: $ ${totalReward}`;
+            totalRewardElement.textContent = `total reward: $ ${totalReward.toFixed(1)}`;
             reward = 0;
             rewardElement.textContent = reward;
             balloon.style.display = 'none';
             inflateButton.style.display = 'none';
             if (bankButton) bankButton.style.display = 'none';
-
+          
             let trialContainer = document.querySelector('.trial-container');
             let bankMessage = document.createElement('div');
             bankMessage.innerHTML = 'banked!';
@@ -222,10 +241,10 @@ export function runTask(jsPsych) {
             bankMessage.style.fontWeight = 'bold';
             trialContainer.appendChild(bankMessage);
             setTimeout(jsPsych.finishTrial, 1000);
-
+          
             reactionTime = inflateTime - balloonTime;
             inflationTime = outcomeTime - inflateTime;
-
+          
             trialData.push({
               balloonType: balloonColor + (isSpecial ? " (special)" : ""),
               outcome: 'banked',
@@ -234,6 +253,7 @@ export function runTask(jsPsych) {
               reward: totalReward
             });
           }
+          
 
           inflateButton.addEventListener('click', inflateBalloon);
           if (bankButton) {
@@ -272,7 +292,7 @@ export function runTask(jsPsych) {
 
       var dateTime = `${day}_${month}_${year}_${hours}_${minutes}_${seconds}`;
 
-      const header = "balloonType,outcome,reactionTime (ms),inflationTime (ms),reward\n";
+      const header = "balloonType,outcome,reactionTime(ms),inflationTime(ms),total reward\n";
       const rows = trialData.map(trial => `${trial.balloonType},${trial.outcome},${trial.reactionTime},${trial.inflationTime},${trial.reward}\n`);
       const csvContent = header + rows.join('');
 
