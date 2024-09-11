@@ -30,8 +30,10 @@ export function taskQuestionnaire(jsPsych) {
           answers[`Question_${index + 1}`] = responseLabels[data.response[question]];
         });
 
-        // Convert the processed answers to CSV format
+        // Convert the processed answers to CSV format with headers
         var csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "question,answer\n"; // Add headers
+
         Object.keys(answers).forEach(function(question) {
           csvContent += `${question},${answers[question]}\n`;
         });
