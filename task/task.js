@@ -9,6 +9,8 @@ export function runTask(jsPsych) {
     });
 
     var totalReward = 0;
+    const popSound = new Audio('sound/pop.wav');
+    const bankSound = new Audio('sound/bank.wav');
     let trialData = [];
     let TrialNum = 250;
     let BalloonSizeStep = 7;
@@ -129,7 +131,6 @@ export function runTask(jsPsych) {
           setTimeout(() => {
             blackSquare.style.display = 'none';
           }, 100);
-
           function inflateBalloon() {
             inflateButton.style.display = 'none';
             inflateTime = performance.now();
@@ -139,7 +140,7 @@ export function runTask(jsPsych) {
             setTimeout(() => {
               blackSquare.style.display = 'none';
             }, 100);
-            
+          
             if (!isGrayBalloon && !isSpecialBalloon) {
               bankButton.style.display = 'block';
             }
@@ -156,6 +157,12 @@ export function runTask(jsPsych) {
               } else {
                 clearInterval(inflationInterval);
                 balloon.style.display = 'none';
+          
+                // Play pop sound only for non-gray, non-special balloons that pop
+                if (!isGrayBalloon && !isSpecialBalloon) {
+                  popSound.play();
+                }
+          
                 const fixedCircle = document.querySelector('.fixed-circle');
                 if (fixedCircle) {
                   fixedCircle.style.display = 'none';
@@ -175,6 +182,11 @@ export function runTask(jsPsych) {
                   totalReward += reward;
                   totalRewardElement.textContent = `total reward: $ ${totalReward.toFixed(1)}`;
                   outcome = 'banked';
+          
+                  // Play bank sound for special trials
+                  if (!isGrayBalloon) {
+                    bankSound.play();
+                  }
           
                   let trialContainer = document.querySelector('.trial-container');
                   let popMessage = document.createElement('div');
@@ -197,6 +209,7 @@ export function runTask(jsPsych) {
                   trialContainer.appendChild(popMessage);
                   setTimeout(jsPsych.finishTrial, 1000);
                 } else {
+                  // For gray balloons, no sound is played
                   setTimeout(jsPsych.finishTrial, 1000);
                 }
           
@@ -214,10 +227,15 @@ export function runTask(jsPsych) {
             }, 100);
           }
           
-
           function bankReward() {
             clearInterval(inflationInterval);
+          
             outcomeTime = performance.now();
+          
+            // Play bank sound for normal and special balloons, but not gray balloons
+            if (!isGrayBalloon) {
+              bankSound.play();
+            }
           
             // Show the black square for 100 ms when the reward is banked
             blackSquare.style.display = 'block';
@@ -253,6 +271,8 @@ export function runTask(jsPsych) {
               reward: totalReward
             });
           }
+          
+                    
           
 
           inflateButton.addEventListener('click', inflateBalloon);
