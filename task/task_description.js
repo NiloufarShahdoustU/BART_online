@@ -48,7 +48,7 @@ var consent_form = {
   type: jsPsychSurveyMultiChoice,
   questions: [
     {
-      prompt: "Do you agree?",
+      prompt: "Do you agree with the terms above?",
       name: 'Consent',
       options: ['I agree.'],
       required: true
