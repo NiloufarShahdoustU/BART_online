@@ -136,7 +136,7 @@ var task_description = {
         <li>If the balloon size exceeds a certain maximum threshold, the balloon <b>pops</b>, and you lose the money for that trial.</li>
       </ul>
       <p><b>Note:</b></p>
-      <p>A grey balloon is a passive trial, you can just watch it.</p>
+      <p>The gray balloons are passive trials and the balloons with gray circles around them are learning trials. In both cases, you only need to start the inflation.</p>
       <p>At the end of the task, there will be a questionnaire. We kindly ask you to take a 5 minutes to answer the questions.</p>
     </div>
   `,
