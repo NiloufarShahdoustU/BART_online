@@ -72,7 +72,7 @@ export function taskQuestionnaire(jsPsych) {
         <div class="center">
           <div class="logo-title">
             <img src="img/logo.png" width="20%">
-            <h1>Impulsivity Questionnaire</h1>
+            <h1>Questionnaire</h1>
             <p>People differ in the ways they act and think in different situations. 
             This is a test to measure some of the ways in which you act and think. 
             Read each statement and choose your response. Do not spend too much time on any statement.</p>

@@ -330,7 +330,7 @@ export function runTask(jsPsych) {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: `
         <div style="font-size: 24px; text-align: center;">
-          <h3>Press 'C' to continue to the questionnaire part.</h3>
+          <h3>Press 'C' to continue to the questionnaire.</h3>
         </div>`,
       choices: ['c'],
       on_finish: function () {
