@@ -10,7 +10,7 @@ export function runTask(jsPsych) {
 
     var totalReward = 0;
     let trialData = [];
-    let TrialNum = 10;
+    let TrialNum = 250;
     let BalloonSizeStep = 8;
     let specialTrialCount = Math.round(TrialNum * 0.25); // 25% special trials (gray + special colorful)
     let normalTrialCount = TrialNum - specialTrialCount;  // 75% normal trials
