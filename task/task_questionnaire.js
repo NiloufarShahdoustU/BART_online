@@ -18,11 +18,13 @@ export function taskQuestionnaire(jsPsych) {
 
         // Map numeric responses to actual labels
         var responseLabels = [
-          "Rarely/Never", 
-          "Occasionally", 
-          "Often", 
-          "Almost Always/Always"
+          "Very True", 
+          "Somewhat True", 
+          "Somewhat False", 
+          "Very False"
         ];
+
+        
 
         // Create a new object with the mapped responses
         var answers = {};
@@ -81,36 +83,31 @@ export function taskQuestionnaire(jsPsych) {
       `,
       button_label: 'Done', // Replacing "Continue" with "Done"
       questions: [
-        {prompt: "1. I plan tasks carefully.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "2. I do things without thinking.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "3. I make up my mind quickly.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "4. I am happy-go-lucky.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "5. I don't 'pay attention.'", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "6. I have 'racing' thoughts.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "7. I plan trips well ahead of time.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "8. I am self-controlled.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "9. I concentrate easily.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "10. I save regularly.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "11. I 'squirm' at plays or lectures.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "12. I am a careful thinker.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "13. I plan for job security.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "14. I say things without thinking.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "15. I like to think about complex problems.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "16. I change jobs.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "17. I act 'on impulse.'", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "18. I get easily bored when solving thought problems.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "19. I act on the spur of the moment.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "20. I am a steady thinker.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "21. I change residences.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "22. I buy things on impulse.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "23. I can only think about one thing at a time.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "24. I change hobbies.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "25. I spend or charge more than I earn.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "26. I often have extraneous thoughts when thinking.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "27. I am more interested in the present than the future.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "28. I am restless at the theater or lectures.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "29. I like puzzles.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true},
-        {prompt: "30. I am future oriented.", labels: ["Rarely/Never", "Occasionally", "Often", "Almost Always/Always"], required: true}
+        {prompt: "1. A person's family is the most important thing in life.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "2. Even if something bad is about to happen to me, I rarely experience fear or nervousness.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "3. I go out of my way to get things I want.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "4. When I'm doing well at something I love to keep at it.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "5. I'm always willing to try something new if I think it will be fun.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "6. How I dress is important to me.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "7. When I get something I want, I feel excited and energized.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "8. Criticism or scolding hurts me quite a bit.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "9. When I want something I usually go all-out to get it.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "10. I will often do things for no other reason than that they might be fun.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "11. It's hard for me to find the time to do things such as get a haircut.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "12. If I see a chance to get something I want I move on it right away.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "13. I feel pretty worried or upset when I think or know somebody is angry at me.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "14. When I see an opportunity for something I like I get excited right away.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "15. I often act on the spur of the moment.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "16. If I think something unpleasant is going to happen I usually get pretty 'worked up.'", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "17. I often wonder why people act the way they do.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "18. When good things happen to me, it affects me strongly.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "19. I feel worried when I think I have done poorly at something important.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "20. I crave excitement and new sensations.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "21. When I go after something I use a 'no holds barred' approach.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "22. I have very few fears compared to my friends.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "23. It would excite me to win a contest.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+{prompt: "24. I worry about making mistakes.", labels: ["Very True", "Somewhat True", "Somewhat False", "Very False"], required: true},
+
       ]
     };
 
